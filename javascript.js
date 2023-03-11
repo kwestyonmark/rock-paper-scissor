@@ -1,64 +1,91 @@
-let playerScore = 0
-let computerScore = 0
-
-function computerPlay() {
-    const arrOfChoices = ['rock','paper','scissor']
-    const randomNum = Math.floor(Math.random() * 3)
-    const computerChoice = (arrOfChoices[randomNum])
-    return computerChoice
+let pScore = 0
+let cScore = 0
+function game () {
    
-}
-
-
-const playRound = (playerSelection, computerSelection) => {
-    if (playerSelection === computerSelection ) {
-        return'Tie'    
-    }else if (playerSelection === 'rock' && computerSelection === 'paper') {
-        computerScore++
-        return'You lose'
-    }else if (playerSelection === 'paper' && computerSelection === 'scissor') {
-        computerScore++
-        return'You lose'
-
-    }else if (playerSelection === 'scissor' && computerSelection === 'rock') {
-        computerScore++
-        return'You lose'
-
-    }else if (playerSelection === 'scissor' && computerSelection === 'paper') {
-        playerScore++
-        return'You win'
-
-    }else if (playerSelection === 'rock' && computerSelection === 'scissor') {
-        playerScore++
-        return'You win'
-
-    }else if (playerSelection === 'paper' && computerSelection === 'rock') {
-        playerScore++
-        return'You win'
-    }
-}
-
-
-function game() {
+    function declareWinner () {
+        resetBtn();
     
-    for (let i = 0; i<5; i++) {
-        const computerSelection = computerPlay();
-        let playerSelection = prompt('Type: rock, paper, scissor');
-       playerSelection = playerSelection.toLowerCase();
-       console.log(playRound(playerSelection, computerSelection))
-            
-    }
-    if (playerScore > computerScore){
-        console.log('You beat the computer')
-    }else if (playerScore < computerScore) {
-        console.log('Game Over')
-    }else {
-        console.log('You tied')
+        if (pScore > cScore) {
+            const text = document.querySelector('.intro h1');
+            text.textContent = 'Victory!'
+        }else {
+            const text = document.querySelector('.intro h1');
+            text.textContent = 'Defeat!'
+        };    
+    
+        function resetBtn () {
+            const reset = document.querySelector('.intro button');
+            reset.textContent = 'Play again?';
+            reset.style.backgroundColor = '#3882f6'
+            reset.style.color = '#f9faf8'
+            reset.style.padding = '5px';
+            reset.style.paddingLeft = '15px';
+            reset.style.paddingRight = '15px';
+            reset.style.borderRadius = '5px';
+        }
         
     }
 
-    console.log(`Your score ${playerScore}`)
-        console.log(`Computer score ${computerScore}`)
-}
+    function start() {
+        const playBtn = document.querySelector('.intro button');
+    
+        playBtn.addEventListener('click', () => {
+            location.reload();
+        });
+    };
+    
+   function playRound() {
+    const options = document.querySelectorAll('.options button');
+    const playerHand = document.querySelector('.playerHand');
+    const computerHand = document.querySelector('.computerHand');
 
-game()
+    const arrOfChoices = ['rock','paper','scissors'];
+
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const randomNum = Math.floor(Math.random() *           arrOfChoices.length);
+            const computerChoice = (arrOfChoices[randomNum]);
+
+            compareChoices(this.textContent, computerChoice);
+
+            playerHand.src = `assets/${this.textContent}.png`;
+            computerHand.src = `assets/${computerChoice}.png`;
+            });
+        });
+   };
+   const updateScore = () => {
+    const playerScore = document.querySelector('.playerScore p');
+    const computerScore = document.querySelector('.computerScore p');
+    playerScore.textContent = pScore;
+    computerScore.textContent = cScore;
+    
+    if (pScore === 5 || cScore === 5) {
+        const match = document.querySelector('.match');
+        match.classList.add('fadeOut');
+        declareWinner()
+        };
+    };
+   
+   const compareChoices = (playerChoice, computerChoice) => {
+    const winner = document.querySelector('.winner');
+    if (playerChoice === computerChoice) {
+        winner.textContent = 'Draw!';
+        return;
+    }else if (playerChoice === 'rock' && computerChoice === 'scissors' || playerChoice === 'scissors' && computerChoice === 'paper' || playerChoice === 'paper' && computerChoice === 'rock'){
+        pScore++;
+        updateScore();
+        winner.textContent = 'Player Win!';
+        return;
+    }else {
+        cScore++;
+        updateScore();
+        winner.textContent = 'Computer Win!';
+        return;
+    };
+   };
+
+   start();
+   playRound();
+   
+};
+game();
