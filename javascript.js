@@ -43,7 +43,7 @@ function game () {
 
     options.forEach(option => {
         option.addEventListener('click', function() {
-            const randomNum = Math.floor(Math.random() *           arrOfChoices.length);
+            const randomNum = Math.floor(Math.random() * arrOfChoices.length);
             const computerChoice = (arrOfChoices[randomNum]);
 
             compareChoices(this.textContent, computerChoice);
